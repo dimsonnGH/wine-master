@@ -25,28 +25,32 @@ def get_wine_card_from_excel(excel_file_name):
 
     return wine_card_by_category
 
-excel_file_name = 'wine.xlsx'
+def main():
+    excel_file_name = 'wine.xlsx'
 
-env = Environment(
-    loader=FileSystemLoader('.'),
-    autoescape=select_autoescape(['html', 'xml'])
-)
+    env = Environment(
+        loader=FileSystemLoader('.'),
+        autoescape=select_autoescape(['html', 'xml'])
+    )
 
-template = env.get_template('template.html')
+    template = env.get_template('template.html')
 
-today = datetime.date.today()
-foundation_date = datetime.datetime(year=1920, month=1, day=1)
-winery_age = (today.year - foundation_date.year)
-wine_card_by_category = get_wine_card_from_excel(excel_file_name)
+    today = datetime.date.today()
+    foundation_date = datetime.datetime(year=1920, month=1, day=1)
+    winery_age = (today.year - foundation_date.year)
+    wine_card_by_category = get_wine_card_from_excel(excel_file_name)
 
-rendered_page = template.render(
-    winery_age=winery_age,
-    years_repr=number_years_repr(winery_age),
-    wine_card=wine_card_by_category,
-)
+    rendered_page = template.render(
+        winery_age=winery_age,
+        years_repr=number_years_repr(winery_age),
+        wine_card=wine_card_by_category,
+    )
 
-with open('index.html', 'w', encoding="utf8") as file:
-    file.write(rendered_page)
+    with open('index.html', 'w', encoding="utf8") as file:
+        file.write(rendered_page)
 
-server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
-server.serve_forever()
+    server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
+    server.serve_forever()
+
+if __name__ == '__main__':
+    main()
