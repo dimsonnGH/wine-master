@@ -2,7 +2,7 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import pandas
 import datetime
-from service_functions import number_years_repr
+from service_functions import get_number_years_repr
 from collections import defaultdict
 
 
@@ -42,7 +42,7 @@ def main():
 
     rendered_page = template.render(
         winery_age=winery_age,
-        years_repr=number_years_repr(winery_age),
+        years_repr=get_number_years_repr(winery_age),
         wine_card=wine_card_by_category,
     )
 

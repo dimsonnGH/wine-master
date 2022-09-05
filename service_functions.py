@@ -1,4 +1,4 @@
-def number_years_repr(number_years):
+def get_number_years_repr(number_years):
     remainder100 = number_years % 100
     remainder10 = number_years % 10
     if remainder100 >= 11 and remainder100 <= 14:
