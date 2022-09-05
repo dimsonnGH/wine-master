@@ -27,6 +27,7 @@ def get_wine_card_from_excel(excel_file_name):
 
 def main():
     excel_file_name = 'wine.xlsx'
+    foundation_year = 1920
 
     env = Environment(
         loader=FileSystemLoader('.'),
@@ -36,8 +37,7 @@ def main():
     template = env.get_template('template.html')
 
     today = datetime.date.today()
-    foundation_date = datetime.datetime(year=1920, month=1, day=1)
-    winery_age = (today.year - foundation_date.year)
+    winery_age = today.year - foundation_year
     wine_card_by_category = get_wine_card_from_excel(excel_file_name)
 
     rendered_page = template.render(
