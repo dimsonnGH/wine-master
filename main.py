@@ -4,6 +4,11 @@ import pandas
 import datetime
 from service_functions import get_number_years_repr
 from collections import defaultdict
+from environs import Env
+import os
+import sys
+import argparse
+import pathlib
 
 
 def get_wine_card_from_excel(excel_file_name):
@@ -25,20 +30,33 @@ def get_wine_card_from_excel(excel_file_name):
 
     return wine_card_by_category
 
-def main():
-    excel_file_name = 'wine.xlsx'
-    foundation_year = 1920
 
-    env = Environment(
+def main(excel_file_path):
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+    env_path = os.path.join(BASE_DIR, 'venv', '.env')
+    env = Env()
+    env.read_env(env_path)
+
+    if not excel_file_path:
+        excel_file_path = env.str('EXCEL_FILE_PATH', '')
+
+    try:
+        wine_card_by_category = get_wine_card_from_excel(excel_file_path)
+    except FileNotFoundError as e:
+        print(f'Define the file name in -f argument or in FOUNDATION_YEAR parameter in the file venv{os.sep}.env')
+        sys.exit(1)
+
+    today = datetime.date.today()
+    foundation_year = env.int('FOUNDATION_YEAR', today.year - 1)
+    winery_age = today.year - foundation_year
+
+    jinja_env = Environment(
         loader=FileSystemLoader('.'),
         autoescape=select_autoescape(['html', 'xml'])
     )
 
-    template = env.get_template('template.html')
-
-    today = datetime.date.today()
-    winery_age = today.year - foundation_year
-    wine_card_by_category = get_wine_card_from_excel(excel_file_name)
+    template = jinja_env.get_template('template.html')
 
     rendered_page = template.render(
         winery_age=winery_age,
@@ -52,5 +70,9 @@ def main():
     server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
     server.serve_forever()
 
+
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Wine-master site')
+    parser.add_argument('-f', type=pathlib.Path, help='Wine card excel file path')
+    args = parser.parse_args()
+    main(args.f)
