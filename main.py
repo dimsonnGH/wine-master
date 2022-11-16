@@ -39,9 +39,9 @@ def main():
 
     excel_file_path = args.f
 
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    base_dir = os.path.dirname(os.path.abspath(__file__))
 
-    env_path = os.path.join(BASE_DIR, 'venv', '.env')
+    env_path = os.path.join(base_dir, 'venv', '.env')
     env = Env()
     env.read_env(env_path)
 
