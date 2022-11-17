@@ -11,9 +11,9 @@ import argparse
 import pathlib
 
 
-def get_wine_card_from_excel(excel_file_name):
+def get_wine_card_from_excel(excel_file_path):
     excel_data_df = pandas.read_excel(
-        excel_file_name,
+        excel_file_path,
         names=['category', 'wine_name', 'grape_variety', 'price', 'image_name', 'promo'],
         keep_default_na=False)
 
