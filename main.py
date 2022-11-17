@@ -20,19 +20,14 @@ def get_wine_card_from_excel(excel_file_path):
     wine_card = excel_data_df.to_dict(orient='records')
 
     wine_card_by_category = defaultdict(list)
+
     for wine in wine_card:
-        category_name = wine['category']
-        category_content = wine_card_by_category[category_name]
-        wine_properties = {
-            wine_property: wine[wine_property] for wine_property in wine.keys() if wine_property != 'category'
-        }
-        category_content.append(wine_properties)
+        wine_card_by_category[wine['category']].append(wine)
 
     return wine_card_by_category
 
 
 def main():
-
     parser = argparse.ArgumentParser(description='Wine-master site')
     parser.add_argument('-f', type=pathlib.Path, help='Wine card excel file path')
     args = parser.parse_args()
@@ -51,7 +46,7 @@ def main():
     try:
         wine_card_by_category = get_wine_card_from_excel(excel_file_path)
     except FileNotFoundError as e:
-        print(f'Define the file name in -f argument or in FOUNDATION_YEAR parameter in the file venv{os.sep}.env')
+        print(f'Define the file name in -f argument or in EXCEL_FILE_PATH parameter in the file venv{os.sep}.env')
         sys.exit(1)
 
     today = datetime.date.today()
