@@ -28,11 +28,6 @@ def get_wine_card_from_excel(excel_file_path):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Wine-master site')
-    parser.add_argument('-f', type=pathlib.Path, help='Wine card excel file path')
-    args = parser.parse_args()
-
-    excel_file_path = args.f
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -40,8 +35,11 @@ def main():
     env = Env()
     env.read_env(env_path)
 
-    if not excel_file_path:
-        excel_file_path = env.str('EXCEL_FILE_PATH', '')
+    parser = argparse.ArgumentParser(description='Wine-master site')
+    parser.add_argument('-f', type=pathlib.Path, default=env.str('EXCEL_FILE_PATH', 'wine.xlsx'), help='Wine card excel file path')
+    args = parser.parse_args()
+
+    excel_file_path = args.f
 
     try:
         wine_card_by_category = get_wine_card_from_excel(excel_file_path)
